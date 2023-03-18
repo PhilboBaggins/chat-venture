@@ -8,7 +8,7 @@ use std::io::{stdin, stdout, Write};
 #[tokio::main]
 async fn main() {
     // Make sure you have a file named `.env` with the `OPENAI_KEY` environment variable defined!
-    dotenv().unwrap();
+    dotenv().expect(".env file not found");
 
     let mut messages = vec![ChatCompletionMessage {
         role: ChatCompletionMessageRole::System,
