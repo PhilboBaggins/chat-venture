@@ -59,7 +59,7 @@ async fn handle_connection(peer: SocketAddr, stream: TcpStream) -> Result<()> {
         .unwrap()
         .unwrap();
     let initial_response = chat_completion.choices.first().unwrap().message.clone();
-    ws_sender.send(format!("AI: {}", initial_response.content.trim()).into()).await?;
+    ws_sender.send(Message::Text(format!("AI: {}", initial_response.content.trim()))).await?;
     prev_messages.push(initial_response);
 
     loop {
@@ -70,7 +70,7 @@ async fn handle_connection(peer: SocketAddr, stream: TcpStream) -> Result<()> {
                         let new_msg = new_msg?;
                         if new_msg.is_text() || new_msg.is_binary() {
                             let reply = handle_message(&mut prev_messages, &new_msg).await?;
-                            ws_sender.send(reply.into()).await?; // TODO: Should I reply here on inside `handle_message`?
+                            ws_sender.send(Message::Text(reply.to_owned())).await?; // TODO: Should I reply here on inside `handle_message`?
                         } else if new_msg.is_close() {
                             break;
                         }
