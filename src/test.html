@@ -19,25 +19,41 @@
         <center>
             <h1>ChatVenture</h1>
             <br>
+            <label>Input:</label><input id="textInputWidget" value="Hello world"/>
             <button id="sendBtn">Click me</button>
-            <br><br>
-            <label id="cursospos"></label>
+            <br>
+            <p id="aiResponseWidget"></p>
         </center>
     </body>
     <script type="text/javascript">
+        const IDLE_TEXT = 'Connected and ready';
+        let textInputWidget = document.getElementById('textInputWidget');
+        let aiResponseWidget = document.getElementById('aiResponseWidget');
+
+        function onWebsocketMessage(message) {
+            if (message.startsWith('Tick')) {
+                console.log(message);
+            } else if (message.startsWith('AI:')) {
+                aiResponseWidget.textContent = 'AI sends: ' + message.substring(4);
+            } else {
+                // ?????
+                console.log('Unknown message received: ', message);
+            }
+        }
+
         (function main() {
             let webSocket = new WebSocket('ws://127.0.0.1:9002');
             webSocket.onopen = (event) => {
 
                 webSocket.onmessage = (event) => {
-                    console.log('Recv:', event.data);
-                };
+                    if (event.data) {
+                        onWebsocketMessage(event.data);
+                    }
+                }
 
                 document.getElementById('sendBtn').addEventListener('click', () => {
-                    console.log('Sending: hello world');
-                    webSocket.send('Hello world');
+                    webSocket.send(textInputWidget.value);
                 });
-
             };
         })();
     </script>

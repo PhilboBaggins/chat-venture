@@ -34,8 +34,7 @@ async fn handle_message(prev_messages: &mut Vec<ChatCompletionMessage>, new_msg:
         .unwrap();
     let returned_message = chat_completion.choices.first().unwrap().message.clone();
 
-    //ws_sender.send(returned_message.content.trim().into()).await?; // TODO: Send whole `returned_message` as JSON
-    let reply = returned_message.content.trim().to_string(); // TODO: Send whole `returned_message` as JSON
+    let reply = format!("AI: {}", returned_message.content.trim()); // TODO: Send whole `returned_message` as JSON
 
     prev_messages.push(returned_message);    
 
@@ -60,7 +59,7 @@ async fn handle_connection(peer: SocketAddr, stream: TcpStream) -> Result<()> {
         .unwrap()
         .unwrap();
     let initial_response = chat_completion.choices.first().unwrap().message.clone();
-    ws_sender.send(initial_response.content.trim().into()).await?; // TODO: Send whole `initial_response` as JSON
+    ws_sender.send(format!("AI: {}", initial_response.content.trim()).into()).await?;
     prev_messages.push(initial_response);
 
     loop {
@@ -80,7 +79,7 @@ async fn handle_connection(peer: SocketAddr, stream: TcpStream) -> Result<()> {
                 }
             }
             _ = interval.tick() => {
-                ws_sender.send(Message::Text("tick".to_owned())).await?;
+                ws_sender.send(Message::Text("Tick".to_owned())).await?;
             }
         }
     }
