@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <title>ChatVenture</title>
+
+        <style type="text/css">
+            body {
+                padding: 50px;
+                font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+                background-color: #C0C0C0;
+            }
+            button {
+
+            }
+        </style>
+    </head>
+    <body>
+        <center>
+            <h1>ChatVenture</h1>
+            <br>
+            <button id="sendBtn">Click me</button>
+            <br><br>
+            <label id="cursospos"></label>
+        </center>
+    </body>
+    <script type="text/javascript">
+        (function main() {
+            let webSocket = new WebSocket('ws://127.0.0.1:9002');
+            webSocket.onopen = (event) => {
+
+                webSocket.onmessage = (event) => {
+                    console.log('Recv:', event.data);
+                };
+
+                document.getElementById('sendBtn').addEventListener('click', () => {
+                    console.log('Sending: hello world');
+                    webSocket.send('Hello world');
+                });
+
+            };
+        })();
+    </script>
+</html>
