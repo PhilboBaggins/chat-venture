@@ -17,18 +17,6 @@ async fn main() {
     }];
 
     loop {
-        print!("User: ");
-        stdout().flush().unwrap();
-
-        let mut user_message_content = String::new();
-
-        stdin().read_line(&mut user_message_content).unwrap();
-        messages.push(ChatCompletionMessage {
-            role: ChatCompletionMessageRole::User,
-            content: user_message_content,
-            name: None,
-        });
-
         let chat_completion = ChatCompletion::builder(ModelID::Gpt3_5Turbo, messages.clone())
             .create()
             .await
@@ -43,5 +31,20 @@ async fn main() {
         );
 
         messages.push(returned_message);
+
+
+
+
+        print!("User: ");
+        stdout().flush().unwrap();
+
+        let mut user_message_content = String::new();
+
+        stdin().read_line(&mut user_message_content).unwrap();
+        messages.push(ChatCompletionMessage {
+            role: ChatCompletionMessageRole::User,
+            content: user_message_content,
+            name: None,
+        });
     }
 }
