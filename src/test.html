@@ -43,18 +43,27 @@
 
         (function main() {
             let webSocket = new WebSocket('ws://127.0.0.1:9002');
-            webSocket.onopen = (event) => {
+            aiResponseWidget.textContent = 'Connecting';
 
-                webSocket.onmessage = (event) => {
-                    if (event.data) {
-                        onWebsocketMessage(event.data);
-                    }
-                }
-
-                document.getElementById('sendBtn').addEventListener('click', () => {
-                    webSocket.send(textInputWidget.value);
-                });
+            webSocket.onclose = (event) => {
+                aiResponseWidget.textContent = 'Connection closed';
             };
+            webSocket.onerror = (event) => {
+                aiResponseWidget.textContent = 'ERROR';
+            };
+            webSocket.onmessage = (event) => {
+                if (event.data) {
+                    onWebsocketMessage(event.data);
+                }
+            };
+            webSocket.onopen = (event) => {
+                aiResponseWidget.textContent = 'Waiting for AI response';
+            };
+
+            document.getElementById('sendBtn').addEventListener('click', () => {
+                if (webSocket.OPEN)
+                    webSocket.send(textInputWidget.value);
+            });
         })();
     </script>
 </html>
