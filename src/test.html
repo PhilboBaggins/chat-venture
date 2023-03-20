@@ -35,6 +35,7 @@
                 console.log(message);
             } else if (message.startsWith('AI:')) {
                 aiResponseWidget.textContent = 'AI sends: ' + message.substring(4);
+                console.log(message);
             } else {
                 // ?????
                 console.log('Unknown message received: ', message);
@@ -61,8 +62,10 @@
             };
 
             document.getElementById('sendBtn').addEventListener('click', () => {
-                if (webSocket.OPEN)
+                if (webSocket.OPEN) {
+                    console.log('User:', textInputWidget.value);
                     webSocket.send(textInputWidget.value);
+                }
             });
         })();
     </script>
